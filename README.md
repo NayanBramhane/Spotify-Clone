@@ -3,7 +3,7 @@ Spotify clone built using vanilla js, vite and tailwind css.
 
 # Deployment
 
-https://youtu.be/eevPd_j34W0?t=4578
+[My Spotify Clone](https://spotify-clone-n.netlify.app/login/login.html)
 
 # User Registeration
 
