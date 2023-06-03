@@ -347,18 +347,27 @@ const onContentScroll = (event) => {
   const header = document.querySelector(".header");
   const coverElement = document.querySelector("#cover-content");
   const totalHeight = coverElement.offsetHeight;
+  const fiftyPercentHeight = totalHeight / 2;
   const coverOpacity =
     100 - (scrollTop >= totalHeight ? 100 : (scrollTop / totalHeight) * 100);
-  const headerOpacity =
-    scrollTop >= header.offsetHeight
-      ? 100
-      : (scrollTop / header.offsetHeight) * 100;
   coverElement.style.opacity = `${coverOpacity}%`;
+
+  let headerOpacity = 0;
+  // once 50% of cover element is crossed, start increasing the opacity
+  if (scrollTop >= fiftyPercentHeight && scrollTop <= totalHeight) {
+    let totatDistance = totalHeight - fiftyPercentHeight;
+    let coveredDistance = scrollTop - fiftyPercentHeight;
+    headerOpacity = (coveredDistance / totatDistance) * 100;
+  } else if (scrollTop > totalHeight) {
+    headerOpacity = 100;
+  } else if (scrollTop < fiftyPercentHeight) {
+    headerOpacity = 0;
+  }
   header.style.background = `rgba(0 0 0 / ${headerOpacity}%)`;
 
   if (history.state.type === SECTIONTYPE.PLAYLIST) {
     const playlistHeader = document.querySelector("#playlist-header");
-    if (coverOpacity <= 35) {
+    if (headerOpacity >= 60) {
       playlistHeader.classList.add("sticky", "bg-black-secondary", "px-8");
       playlistHeader.classList.remove("mx-8");
       playlistHeader.style.top = `${header.offsetHeight}px`;
@@ -405,7 +414,7 @@ const loadUserPlaylists = async () => {
     li.textContent = name;
     li.className = "cursor-pointer hover:text-primary";
     li.addEventListener("click", () => onUserPlaylistClick(id));
-    userPlaylistSelection.appendChild(li)
+    userPlaylistSelection.appendChild(li);
   }
 };
 
